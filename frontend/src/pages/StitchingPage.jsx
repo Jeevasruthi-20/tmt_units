@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/react/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Ruler } from 'lucide-react';
-import { Button } from '@/components/react/button';
+import { Button } from '@/components/ui/button';
 
 export default function StitchingPage() {
   const services = [

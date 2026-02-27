@@ -1,11 +1,10 @@
 import express from 'express';
+import ClassEnrollment from '../models/ClassEnrollment.js';
+
 const router = express.Router();
 
-// Store class enrollments (in production, use a database)
-let enrollments = [];
-
 // Submit online class enrollment
-router.post('/online', (req, res) => {
+router.post('/online', async (req, res) => {
   try {
     const {
       name,
@@ -25,8 +24,7 @@ router.post('/online', (req, res) => {
     }
 
     // Create enrollment
-    const enrollment = {
-      id: Date.now().toString(),
+    const enrollment = new ClassEnrollment({
       type: 'online',
       name,
       email,
@@ -34,19 +32,16 @@ router.post('/online', (req, res) => {
       classType,
       preferredDate,
       preferredTime,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
+    });
 
-    // In production, save to database
-    enrollments.push(enrollment);
+    await enrollment.save();
 
     console.log('New online class enrollment:', enrollment);
 
     res.status(201).json({
       success: true,
       message: 'Online class enrollment submitted successfully',
-      enrollmentId: enrollment.id,
+      enrollmentId: enrollment._id,
     });
   } catch (error) {
     console.error('Error submitting online enrollment:', error);
@@ -58,7 +53,7 @@ router.post('/online', (req, res) => {
 });
 
 // Submit offline class contact request
-router.post('/offline', (req, res) => {
+router.post('/offline', async (req, res) => {
   try {
     const {
       name,
@@ -78,8 +73,7 @@ router.post('/offline', (req, res) => {
     }
 
     // Create contact request
-    const contactRequest = {
-      id: Date.now().toString(),
+    const contactRequest = new ClassEnrollment({
       type: 'offline',
       name,
       email,
@@ -87,19 +81,16 @@ router.post('/offline', (req, res) => {
       classType,
       address: address || '',
       message: message || '',
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
+    });
 
-    // In production, save to database
-    enrollments.push(contactRequest);
+    await contactRequest.save();
 
     console.log('New offline class contact request:', contactRequest);
 
     res.status(201).json({
       success: true,
       message: 'Contact request submitted successfully. We will contact you soon.',
-      requestId: contactRequest.id,
+      requestId: contactRequest._id,
     });
   } catch (error) {
     console.error('Error submitting offline contact:', error);
@@ -111,29 +102,46 @@ router.post('/offline', (req, res) => {
 });
 
 // Get all enrollments (admin endpoint)
-router.get('/all', (req, res) => {
-  res.json({
-    success: true,
-    data: enrollments,
-  });
+router.get('/all', async (req, res) => {
+  try {
+    const enrollments = await ClassEnrollment.find().sort({ createdAt: -1 });
+    res.json({
+      success: true,
+      data: enrollments,
+    });
+  } catch (error) {
+    console.error('Error fetching enrollments:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
 });
 
 // Get enrollment by ID
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const enrollment = enrollments.find((e) => e.id === id);
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const enrollment = await ClassEnrollment.findById(id);
 
-  if (!enrollment) {
-    return res.status(404).json({
+    if (!enrollment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Enrollment not found',
+      });
+    }
+
+    res.json({
+      success: true,
+      data: enrollment,
+    });
+  } catch (error) {
+    console.error('Error fetching enrollment:', error);
+    res.status(500).json({
       success: false,
-      message: 'Enrollment not found',
+      message: 'Internal server error',
     });
   }
-
-  res.json({
-    success: true,
-    data: enrollment,
-  });
 });
 
 export default router;

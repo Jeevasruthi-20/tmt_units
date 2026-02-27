@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { Button } from '@/components/react/button';
+import { Button } from '@/components/ui/button';
 import MeasurementGuide from '@/components/features/MeasurementGuide';
 import MeasurementForm from '@/components/forms/MeasurementForm';
 import {
@@ -10,7 +10,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/react/breadcrumb';
+} from '@/components/ui/breadcrumb';
 
 export default function PantsMeasurementPage() {
   const pantTypes = [

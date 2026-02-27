@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/react/button';
-import { Input } from '@/components/react/input';
-import { Label } from '@/components/react/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/react/select';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { submitOnlineClassEnrollment } from '@/lib/api';
 
@@ -10,13 +10,13 @@ const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validatePhone = (phone) => /^[\d\s\-\+\(\)]{10,}$/.test(phone.replace(/\s/g, ''));
 const validateName = (name) => /^[a-zA-Z\s]{2,}$/.test(name.trim());
 
-export default function OnlineClassForm({ classes }) {
+export default function OnlineClassForm({ classes, initialClassId }) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    classType: '',
+    classType: initialClassId || '',
     preferredDate: '',
     preferredTime: '',
   });
@@ -73,7 +73,7 @@ export default function OnlineClassForm({ classes }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       toast({
         title: 'Validation Error',

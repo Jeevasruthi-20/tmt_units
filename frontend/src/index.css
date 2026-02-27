@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,35 +6,66 @@
 
 @layer base {
   :root {
-    --background: 40 40% 98%;
-    --foreground: 25 30% 12%;
+    /* Premium Earth & Gold Palette */
+    --background: 40 20% 98%; /* Soft Linen */
+    --foreground: 20 10% 15%; /* Deep Espresso */
 
     --card: 0 0% 100%;
-    --card-foreground: 25 30% 12%;
+    --card-foreground: 20 10% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 25 30% 12%;
+    --popover-foreground: 20 10% 15%;
 
-    --primary: 28 85% 52%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 27 45% 38%; /* Cognac / Leather */
+    --primary-foreground: 40 20% 98%;
 
-    --secondary: 184 65% 38%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 165 25% 28%; /* Hunter Green */
+    --secondary-foreground: 40 20% 98%;
 
-    --muted: 40 20% 94%;
-    --muted-foreground: 25 10% 45%;
+    --muted: 40 10% 94%;
+    --muted-foreground: 25 5% 45%;
 
-    --accent: 28 75% 92%;
-    --accent-foreground: 25 30% 12%;
+    --accent: 45 60% 55%; /* Antique Gold */
+    --accent-foreground: 20 10% 15%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 28 85% 52%;
+    --border: 40 10% 90%;
+    --input: 40 10% 90%;
+    --ring: 27 45% 38%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 20 10% 10%;
+    --foreground: 40 20% 98%;
+
+    --card: 20 10% 12%;
+    --card-foreground: 40 20% 98%;
+
+    --popover: 20 10% 12%;
+    --popover-foreground: 40 20% 98%;
+
+    --primary: 27 45% 48%;
+    --primary-foreground: 20 10% 10%;
+
+    --secondary: 165 25% 38%;
+    --secondary-foreground: 20 10% 10%;
+
+    --muted: 20 10% 18%;
+    --muted-foreground: 25 5% 65%;
+
+    --accent: 45 60% 65%;
+    --accent-foreground: 20 10% 10%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 20 10% 18%;
+    --input: 20 10% 18%;
+    --ring: 27 45% 48%;
   }
 }
 
@@ -42,16 +73,23 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground selection:bg-primary/20 selection:text-primary;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-serif tracking-tight;
   }
 }
 
 @layer components {
+  .container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+  
   .embroidery-border {
     position: relative;
   }
@@ -61,7 +99,41 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite linear;
   }
+
+  .text-shadow {
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .text-shadow-lg {
+    text-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.glass-card {
+  @apply bg-white/80 dark:bg-black/40 backdrop-blur-md border border-white/20 shadow-xl;
 }

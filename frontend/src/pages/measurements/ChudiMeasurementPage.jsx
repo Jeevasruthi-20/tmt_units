@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/react/button';
+import { Button } from '@/components/ui/button';
 import MeasurementGuide from '@/components/features/MeasurementGuide';
 import MeasurementForm from '@/components/forms/MeasurementForm';
 
@@ -46,7 +46,7 @@ export default function ChudiMeasurementPage() {
   return (
     <div>
       {/* Header */}
-        <section className="bg-gradient-to-br from-primary/10 to-secondary/5 py-8 lg:py-12">
+      <section className="bg-gradient-to-br from-primary/10 to-secondary/5 py-8 lg:py-12">
         <div className="container mx-auto px-4">
           <Link to="/stitching">
             <Button variant="ghost" className="mb-4">
@@ -66,7 +66,7 @@ export default function ChudiMeasurementPage() {
       </section>
 
       {/* Content */}
-        <section className="container mx-auto px-4 py-12 lg:py-12">
+      <section className="container mx-auto px-4 py-12 lg:py-12">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Measurement Guide */}
           <div>

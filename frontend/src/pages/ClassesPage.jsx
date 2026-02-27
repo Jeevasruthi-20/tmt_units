@@ -1,62 +1,10 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/react/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/react/tabs';
-import OnlineClassForm from '@/components/forms/OnlineClassForm';
-import OfflineClassForm from '@/components/forms/OfflineClassForm';
-import { Scissors, Sparkles, Heart } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { courses } from '@/data/courses';
 
 export default function ClassesPage() {
-  const classes = [
-    {
-      id: 'tailoring',
-      title: 'Tailoring Classes',
-      description: 'Master garment construction, pattern making, and professional tailoring techniques',
-      icon: Scissors,
-      color: 'from-primary to-amber-600',
-      features: [
-        'Basic to advanced stitching techniques',
-        'Pattern making and design',
-        'Garment construction',
-        'Professional finishing methods',
-      ],
-      duration: '3 months',
-      // Image 9: Women working at sewing machines
-      image: '/images/tailoring.jpg',
-    },
-    {
-      id: 'aari',
-      title: 'Aari Work Classes',
-      description: 'Learn traditional South Indian embroidery with the aari needle',
-      icon: Sparkles,
-      color: 'from-secondary to-teal-600',
-      features: [
-        'Traditional aari techniques',
-        'Bead and sequin work',
-        'Design creation',
-        'Bridal and occasion wear embroidery',
-      ],
-      duration: '2 months',
-      // Image 8: Red fabric with gold embroidery and bird motif
-      image: '/images/aari.jpg',
-    },
-    {
-      id: 'embroidery',
-      title: 'Embroidery Classes',
-      description: 'Create beautiful hand-embroidered designs and intricate patterns',
-      icon: Heart,
-      color: 'from-pink-500 to-rose-600',
-      features: [
-        'Various embroidery stitches',
-        'Thread work techniques',
-        'Design planning',
-        'Contemporary and traditional patterns',
-      ],
-      duration: '2 months',
-      // Image 7: Fuchsia pink aari blouse
-      image: '/images/embroidery.jpg',
-    },
-  ];
-
   return (
     <div>
       {/* Hero Section */}
@@ -76,11 +24,11 @@ export default function ClassesPage() {
       {/* Classes Overview */}
       <section className="container mx-auto px-4 py-16 lg:py-20">
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {classes.map((classItem) => {
+          {courses.map((classItem) => {
             const Icon = classItem.icon;
             return (
-              <Card key={classItem.id} className="hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
-                <div className="relative h-48 overflow-hidden rounded-t-lg">
+              <Card key={classItem.id} className="hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50 flex flex-col h-full">
+                <div className="relative h-48 overflow-hidden rounded-t-lg shrink-0">
                   <img
                     src={classItem.image}
                     alt={classItem.title}
@@ -92,72 +40,52 @@ export default function ClassesPage() {
                   </div>
                 </div>
                 <CardHeader>
-                  <CardTitle className="font-serif text-xl">{classItem.title}</CardTitle>
-                  <CardDescription>{classItem.description}</CardDescription>
+                  <CardTitle className="font-serif text-xl h-14 flex items-center">{classItem.title}</CardTitle>
+                  <CardDescription className="line-clamp-2">{classItem.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="font-semibold text-primary">Duration:</span>
-                      <span className="text-muted-foreground">{classItem.duration}</span>
+                <CardContent className="flex-1 flex flex-col">
+                  <div className="space-y-4 mb-4 flex-1">
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="bg-primary/5 p-2 rounded">
+                        <span className="block font-semibold text-primary text-xs uppercase tracking-wider mb-1">Duration</span>
+                        <span className="font-medium text-foreground">{classItem.duration}</span>
+                      </div>
+                      <div className="bg-secondary/5 p-2 rounded">
+                        <span className="block font-semibold text-secondary text-xs uppercase tracking-wider mb-1">Fee</span>
+                        <span className="font-medium text-foreground">{classItem.fee}</span>
+                      </div>
                     </div>
-                    <ul className="space-y-2">
-                      {classItem.features.map((feature, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+
+                    <div>
+                      <span className="block font-semibold text-foreground text-sm mb-2">Course Coverage:</span>
+                      <ul className="space-y-2">
+                        {classItem.features.map((feature, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <span className="text-primary mt-1 shrink-0">•</span>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-border mt-auto space-y-4">
+                    <p className="text-sm text-muted-foreground italic">
+                      <span className="font-semibold text-primary not-italic">Outcome: </span>
+                      {classItem.outcome}
+                    </p>
+                    <Link to={`/classes/${classItem.id}`} className="block">
+                      <Button variant="outline" className="w-full group hover:bg-primary hover:text-primary-foreground border-primary/20">
+                        View More <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
             );
           })}
         </div>
-
-        {/* Enrollment Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-serif font-bold text-3xl text-foreground mb-4">
-              Enroll Now
-            </h2>
-            <p className="text-muted-foreground">
-              Choose your preferred learning mode and select a class to get started
-            </p>
-          </div>
-
-          <Card className="shadow-xl">
-            <CardContent className="p-6 lg:p-8">
-              <Tabs defaultValue="online" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-8">
-                  <TabsTrigger value="online" className="text-base">Online Classes</TabsTrigger>
-                  <TabsTrigger value="offline" className="text-base">Offline Classes</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="online" className="space-y-6">
-                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-semibold text-foreground">Online Classes:</span> Join from anywhere with live interactive sessions. Select your preferred time slot and we'll confirm your schedule.
-                    </p>
-                  </div>
-                  <OnlineClassForm classes={classes} />
-                </TabsContent>
-                
-                <TabsContent value="offline" className="space-y-6">
-                  <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-4 mb-6">
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-semibold text-foreground">Offline Classes:</span> Attend in-person sessions at our center. Submit your details and we'll contact you with available schedules.
-                    </p>
-                  </div>
-                  <OfflineClassForm classes={classes} />
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
       </section>
     </div>
   );
 }
-

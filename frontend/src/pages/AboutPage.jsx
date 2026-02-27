@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/react/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Heart, Users, Award, Target } from 'lucide-react';
 
 export default function AboutPage() {
@@ -33,7 +33,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="font-serif font-bold text-4xl lg:text-5xl text-foreground mb-6">
-               About Thangam Magalir Thaiyalagam
+              About Thangam Magalir Thaiyalagam
             </h1>
             <p className="text-lg lg:text-xl text-muted-foreground leading-relaxed">
               Empowering women through traditional crafts and professional tailoring education since our inception

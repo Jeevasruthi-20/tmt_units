@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/react/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function MeasurementGuide({ measurements }) {
   return (

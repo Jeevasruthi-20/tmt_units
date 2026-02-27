@@ -5,7 +5,13 @@ import dotenv from 'dotenv';
 import measurementRoutes from './routes/measurements.js';
 import classRoutes from './routes/classes.js';
 
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +20,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// MongoDB Connection
+import mongoose from 'mongoose';
+
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/tailoring')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/measurements', measurementRoutes);

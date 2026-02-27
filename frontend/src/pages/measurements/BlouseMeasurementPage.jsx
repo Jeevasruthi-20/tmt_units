@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/react/button';
+import { Button } from '@/components/ui/button';
 import MeasurementGuide from '@/components/features/MeasurementGuide';
 import MeasurementForm from '@/components/forms/MeasurementForm';
 
@@ -74,10 +74,10 @@ export default function BlouseMeasurementPage() {
               How to Measure
             </h2>
             <img
-    src="/images/measurement.jpg"
-    alt="Blouse measurement guide"
-    className="rounded-lg mb-6 w-full object-cover shadow-md"
-  />
+              src="/images/measurement.jpg"
+              alt="Blouse measurement guide"
+              className="rounded-lg mb-6 w-full object-cover shadow-md"
+            />
             <MeasurementGuide measurements={measurements} />
           </div>
 

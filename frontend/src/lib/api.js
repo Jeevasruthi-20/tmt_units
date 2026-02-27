@@ -53,3 +53,13 @@ export const submitOfflineClassContact = async (contact) => {
   return response.json();
 };
 
+export const fetchEnrollments = async () => {
+  const response = await fetch(`${API_BASE_URL}/classes/all`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to fetch enrollments');
+  }
+
+  return response.json();
+};

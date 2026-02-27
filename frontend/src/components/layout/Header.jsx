@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from '@/components/react/button';
+import { Button } from '@/components/ui/button';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +12,7 @@ export default function Header() {
     { path: '/classes', label: 'Classes' },
     { path: '/stitching', label: 'Stitching Services' },
     { path: '/about', label: 'About' },
+    { path: '/admin', label: 'Admin Login' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -22,9 +23,9 @@ export default function Header() {
         <div className="flex items-center justify-between h-14 lg:h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <img 
-              src="/logo.jpeg" 
-              alt="Thangam Magalir Thaiyalagam" 
+            <img
+              src="/logo.jpeg"
+              alt="Thangam Magalir Thaiyalagam"
               className="h-10 w-10 lg:h-12 lg:w-12 rounded-lg group-hover:scale-105 transition-transform object-cover"
             />
             <span className="font-serif font-bold text-lg lg:text-xl text-foreground">
