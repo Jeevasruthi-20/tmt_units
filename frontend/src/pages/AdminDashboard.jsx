@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchEnrollments } from '@/lib/api';
+import { fetchEnrollments, fetchMeasurements } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
 
 export default function AdminDashboard() {
     const [enrollments, setEnrollments] = useState([]);
+    const [measurements, setMeasurements] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -20,12 +21,14 @@ export default function AdminDashboard() {
 
         const loadData = async () => {
             try {
-                const response = await fetchEnrollments();
-                if (response.success) {
-                    setEnrollments(response.data);
-                }
+                const [enrollRes, measureRes] = await Promise.all([
+                    fetchEnrollments(),
+                    fetchMeasurements()
+                ]);
+                if (enrollRes.success) setEnrollments(enrollRes.data);
+                if (measureRes.success) setMeasurements(measureRes.data);
             } catch (error) {
-                console.error('Failed to load enrollments:', error);
+                console.error('Failed to load dashboard data:', error);
             } finally {
                 setLoading(false);
             }
@@ -48,7 +51,8 @@ export default function AdminDashboard() {
                 }} variant="outline">Logout</Button>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-8">
+                {/* Class Enrollments */}
                 <Card>
                     <CardHeader>
                         <CardTitle>Class Enrollments & Inquiries</CardTitle>
@@ -103,6 +107,69 @@ export default function AdminDashboard() {
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <Badge variant="outline">{enrollment.status}</Badge>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* Measurement Orders */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Stitching & Measurement Orders</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {measurements.length === 0 ? (
+                            <p className="text-muted-foreground text-center py-8">No measurement orders found.</p>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-muted/50 text-muted-foreground uppercase text-xs">
+                                        <tr>
+                                            <th className="px-4 py-3">Date</th>
+                                            <th className="px-4 py-3">Garment</th>
+                                            <th className="px-4 py-3">Customer</th>
+                                            <th className="px-4 py-3">Measurements</th>
+                                            <th className="px-4 py-3">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {measurements.map((order) => (
+                                            <tr key={order._id || order.id} className="hover:bg-muted/50">
+                                                <td className="px-4 py-3 whitespace-nowrap">
+                                                    {order.createdAt ? format(new Date(order.createdAt), 'MMM d, yyyy') : '-'}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <Badge variant="outline">{order.garmentType}</Badge>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium">{order.customerName}</span>
+                                                        <span className="text-xs text-muted-foreground">{order.email}</span>
+                                                        <span className="text-xs text-muted-foreground">{order.phone}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <div className="text-xs space-y-1">
+                                                        {Object.entries(order.measurements || {})
+                                                            .filter(([key]) => !key.endsWith('_inches') && key !== 'unit')
+                                                            .map(([key, val]) => (
+                                                                <p key={key}><span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span> {val} {order.measurements.unit === 'inches' ? 'in' : 'cm'}</p>
+                                                            ))
+                                                        }
+                                                        {order.notes && (
+                                                            <p className="mt-2 pt-2 border-t font-italic text-muted-foreground">
+                                                                Notes: {order.notes}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <Badge variant="outline">{order.status}</Badge>
                                                 </td>
                                             </tr>
                                         ))}

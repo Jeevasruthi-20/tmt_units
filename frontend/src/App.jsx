@@ -16,6 +16,7 @@ import TraditionalTopSkirtMeasurementPage from '@/pages/measurements/Traditional
 import LehengaMeasurementPage from '@/pages/measurements/LehengaMeasurementPage';
 
 import FrockMeasurementPage from '@/pages/measurements/FrockMeasurementPage';
+import AnarkaliMeasurementPage from '@/pages/measurements/AnarkaliMeasurementPage';
 import EnrollmentPage from '@/pages/EnrollmentPage';
 import ClassDetailsPage from '@/pages/ClassDetailsPage';
 import AdminLogin from '@/pages/AdminLogin';
@@ -42,6 +43,7 @@ function App() {
             <Route path="/stitching/traditional-top-skirt" element={<TraditionalTopSkirtMeasurementPage />} />
             <Route path="/stitching/lehenga" element={<LehengaMeasurementPage />} />
             <Route path="/stitching/frock" element={<FrockMeasurementPage />} />
+            <Route path="/stitching/anarkali" element={<AnarkaliMeasurementPage />} />
             <Route path="/enroll" element={<EnrollmentPage />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />

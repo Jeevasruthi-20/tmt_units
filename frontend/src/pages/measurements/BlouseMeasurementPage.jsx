@@ -6,41 +6,31 @@ import MeasurementForm from '@/components/forms/MeasurementForm';
 
 export default function BlouseMeasurementPage() {
   const measurements = [
-    {
-      name: 'Bust',
-      instruction: 'Measure around the fullest part of your bust, keeping the tape parallel to the floor and not too tight.',
-    },
-    {
-      name: 'Waist',
-      instruction: 'Measure around your natural waistline. This helps determine the blouse length and fit.',
-    },
-    {
-      name: 'Shoulder Width',
-      instruction: 'Measure from one shoulder edge to the other across your back for proper shoulder fit.',
-    },
-    {
-      name: 'Sleeve Length',
-      instruction: 'Measure from the shoulder point to where you want the sleeve to end (wrist, elbow, or short sleeve).',
-    },
-    {
-      name: 'Blouse Length',
-      instruction: 'Measure from the shoulder down to where you want the blouse to end at your waist or hip.',
-    },
-    {
-      name: 'Armhole',
-      instruction: 'Measure around your armhole from the shoulder point, under the arm, and back to the shoulder.',
-    },
+    { name: 'Around Bust', instruction: 'Measure around the fullest part of your bust.' },
+    { name: 'Below Bust', instruction: 'Measure around your ribcage directly under your bust.' },
+    { name: 'Shoulder', instruction: 'Measure from one shoulder point to the other across your back.' },
+    { name: 'Short Sleeve Length', instruction: 'Measure from the shoulder point to your desired short sleeve end.' },
+    { name: 'Long Sleeve Length', instruction: 'Measure from the shoulder point to your wrist for long sleeves.' },
+    { name: 'Short Sleeve Round', instruction: 'Measure the circumference of your arm at the short sleeve end.' },
+    { name: 'Long Sleeve Round', instruction: 'Measure the circumference of your wrist for long sleeves.' },
+    { name: 'Arm Hole', instruction: 'Measure the circumference of your armhole.' },
+    { name: 'Front Neck Depth', instruction: 'Measure from the high point of shoulder to desired front neck depth.' },
+    { name: 'Back Depth', instruction: 'Measure from the high point of shoulder to desired back neck depth.' },
+    { name: 'Height', instruction: 'Total height from shoulder to desired blouse length.' },
   ];
 
   const formFields = [
-    { name: 'bust', label: 'Bust', required: true },
-    { name: 'waist', label: 'Waist', required: true },
-    { name: 'shoulder', label: 'Shoulder Width', required: true },
-    { name: 'sleeveLength', label: 'Sleeve Length', required: true },
-    { name: 'blouseLength', label: 'Blouse Length', required: true },
-    { name: 'armhole', label: 'Armhole', required: true },
-    { name: 'frontNeck', label: 'Front Neck Depth' },
-    { name: 'backNeck', label: 'Back Neck Depth' },
+    { name: 'aroundBust', label: 'Around Bust', required: true },
+    { name: 'belowBust', label: 'Below Bust', required: true },
+    { name: 'shoulder', label: 'Shoulder', required: true },
+    { name: 'shortSleeveLength', label: 'Short Sleeve Length' },
+    { name: 'longSleeveLength', label: 'Long Sleeve Length' },
+    { name: 'shortSleeveRound', label: 'Short Sleeve Round' },
+    { name: 'longSleeveRound', label: 'Long Sleeve Round' },
+    { name: 'armHole', label: 'Arm Hole', required: true },
+    { name: 'frontNeckDepth', label: 'Front Neck Depth', required: true },
+    { name: 'backDepth', label: 'Back Depth', required: true },
+    { name: 'height', label: 'Height', required: true },
   ];
 
   return (

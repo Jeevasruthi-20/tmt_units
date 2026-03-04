@@ -1,18 +1,17 @@
 import express from 'express';
 const router = express.Router();
 
-// Store measurements (in production, use a database)
-let measurements = [];
+import Measurement from '../models/Measurement.js';
 
 // Submit measurement order
-router.post('/submit', (req, res) => {
+router.post('/submit', async (req, res) => {
   try {
     const {
       garmentType,
       customerName,
       phone,
       email,
-      measurements: measurementData,
+      measurements,
       notes,
     } = req.body;
 
@@ -24,28 +23,23 @@ router.post('/submit', (req, res) => {
       });
     }
 
-    // Create order
-    const order = {
-      id: Date.now().toString(),
+    const order = new Measurement({
       garmentType,
       customerName,
       phone,
       email: email || '',
-      measurements: measurementData || {},
+      measurements: measurements || {},
       notes: notes || '',
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
+    });
 
-    // In production, save to database
-    measurements.push(order);
+    await order.save();
 
-    console.log('New measurement order:', order);
+    console.log('New measurement order saved to DB:', order._id);
 
     res.status(201).json({
       success: true,
       message: 'Measurement order submitted successfully',
-      orderId: order.id,
+      orderId: order._id,
     });
   } catch (error) {
     console.error('Error submitting measurement:', error);
@@ -57,11 +51,16 @@ router.post('/submit', (req, res) => {
 });
 
 // Get all measurements (admin endpoint)
-router.get('/all', (req, res) => {
-  res.json({
-    success: true,
-    data: measurements,
-  });
+router.get('/all', async (req, res) => {
+  try {
+    const orders = await Measurement.find().sort({ createdAt: -1 });
+    res.json({
+      success: true,
+      data: orders,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch orders' });
+  }
 });
 
 // Get measurement by ID

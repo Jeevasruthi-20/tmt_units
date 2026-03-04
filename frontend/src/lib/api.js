@@ -63,3 +63,14 @@ export const fetchEnrollments = async () => {
 
   return response.json();
 };
+
+export const fetchMeasurements = async () => {
+  const response = await fetch(`${API_BASE_URL}/measurements/all`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to fetch measurements');
+  }
+
+  return response.json();
+};

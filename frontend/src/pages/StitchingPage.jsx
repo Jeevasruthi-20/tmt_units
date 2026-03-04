@@ -57,6 +57,13 @@ export default function StitchingPage() {
       path: '/stitching/frock',
       measurements: ['Bust', 'Waist', 'Hip', 'Shoulder', 'Sleeve', 'Frock Length'],
     },
+    {
+      title: 'Anarkali',
+      description: 'Classic Anarkali suits with elegant flares and intricate designs',
+      image: '/images/anarkali.jpg',
+      path: '/stitching/anarkali',
+      measurements: ['Bust', 'Waist', 'Hip', 'Shoulder', 'Sleeve', 'Anarkali Length'],
+    },
   ];
 
   return (

@@ -7,40 +7,55 @@ import MeasurementForm from '@/components/forms/MeasurementForm';
 export default function ChudiMeasurementPage() {
   const measurements = [
     {
-      name: 'Bust',
-      instruction: 'Measure around the fullest part of your bust, keeping the tape parallel to the floor. The tape should be snug but not tight.',
+      name: 'Total Length',
+      instruction: 'Measure from the highest point of shoulder (HSP) straight down to the desired length of the kurti.',
     },
     {
-      name: 'Waist',
-      instruction: 'Measure around your natural waistline (the narrowest part of your torso, usually above your belly button). Keep one finger between the tape and your body.',
+      name: 'Shoulder Length',
+      instruction: 'Measure from one shoulder point to the other across the back.',
     },
     {
-      name: 'Hip',
-      instruction: 'Measure around the fullest part of your hips and buttocks, usually about 7-9 inches below your waist. Keep the tape parallel to the floor. The tape should wrap around the widest part of your hips.',
+      name: 'Across Bust',
+      instruction: 'Measure around the fullest part of the bust.',
     },
     {
-      name: 'Shoulder Width',
-      instruction: 'Measure from the edge of one shoulder to the edge of the other shoulder across your back.',
+      name: 'Across Waist',
+      instruction: 'Measure around the natural waistline.',
     },
     {
-      name: 'Sleeve Length',
-      instruction: 'Measure from the shoulder point down to your wrist bone with your arm slightly bent.',
+      name: 'Across Hip',
+      instruction: 'Measure around the fullest part of the hips.',
     },
     {
-      name: 'Chudi Length',
-      instruction: 'Measure from the shoulder point straight down to where you want the chudi to end (usually ankle length).',
+      name: 'Armhole',
+      instruction: 'Measure the circumference of the armhole.',
+    },
+    {
+      name: 'Sleeve Lengths',
+      instruction: 'Measure from the shoulder point for 1/2, 3/4, or Full sleeve length as required.',
+    },
+    {
+      name: 'Slit Length',
+      instruction: 'Measure from the shoulder or waist down to where the side slit starts.',
+    },
+    {
+      name: 'Bottom Width',
+      instruction: 'Measure the width of the kurti at the bottom hem.',
     },
   ];
 
   const formFields = [
-    { name: 'bust', label: 'Bust', required: true },
-    { name: 'waist', label: 'Waist', required: true },
-    { name: 'hip', label: 'Hip', required: true },
-    { name: 'shoulder', label: 'Shoulder Width', required: true },
-    { name: 'sleeveLength', label: 'Sleeve Length', required: true },
-    { name: 'chudiLength', label: 'Chudi Length', required: true },
-    { name: 'armhole', label: 'Armhole' },
-    { name: 'frontNeck', label: 'Front Neck Depth' },
+    { name: 'totalLength', label: 'Total Length (from HSP)', required: true },
+    { name: 'shoulderLength', label: 'Shoulder Length', required: true },
+    { name: 'acrossBust', label: 'Across Bust', required: true },
+    { name: 'acrossWaist', label: 'Across Waist', required: true },
+    { name: 'acrossHip', label: 'Across Hip', required: true },
+    { name: 'armhole', label: 'Armhole', required: true },
+    { name: 'sleeveLengthHalf', label: '1/2 Sleeve Length' },
+    { name: 'sleeveLengthThreeFourth', label: '3/4 Sleeve Length' },
+    { name: 'sleeveLengthFull', label: 'Full Sleeve Length' },
+    { name: 'slitLength', label: 'Slit Length' },
+    { name: 'bottomWidth', label: 'Bottom Width' },
   ];
 
   return (
@@ -69,11 +84,22 @@ export default function ChudiMeasurementPage() {
       <section className="container mx-auto px-4 py-12 lg:py-12">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Measurement Guide */}
-          <div>
-            <h2 className="font-serif font-bold text-2xl text-foreground mb-4">
-              How to Measure
-            </h2>
-            <MeasurementGuide measurements={measurements} />
+          <div className="space-y-8">
+            <div>
+              <h2 className="font-serif font-bold text-2xl text-foreground mb-4">
+                How to Measure
+              </h2>
+              <MeasurementGuide measurements={measurements} />
+            </div>
+
+            <div className="bg-white rounded-xl shadow-lg border p-6">
+              <h3 className="font-serif font-semibold text-xl mb-4">Visual Guide</h3>
+              <img
+                src="/src/assets/guides/chudi_guide_hd.png"
+                alt="Chudi Measurement Guide"
+                className="w-full h-auto rounded-lg shadow-inner"
+              />
+            </div>
           </div>
 
           {/* Measurement Form */}
