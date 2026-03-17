@@ -1,5 +1,6 @@
 import express from 'express';
 import ClassEnrollment from '../models/ClassEnrollment.js';
+import { sendClassNotification } from '../utils/email.js';
 
 const router = express.Router();
 
@@ -37,6 +38,9 @@ router.post('/online', async (req, res) => {
     await enrollment.save();
 
     console.log('New online class enrollment:', enrollment);
+
+    // Send email notification
+    await sendClassNotification(enrollment);
 
     res.status(201).json({
       success: true,
@@ -86,6 +90,9 @@ router.post('/offline', async (req, res) => {
     await contactRequest.save();
 
     console.log('New offline class contact request:', contactRequest);
+
+    // Send email notification
+    await sendClassNotification(contactRequest);
 
     res.status(201).json({
       success: true,
@@ -141,6 +148,37 @@ router.get('/:id', async (req, res) => {
       success: false,
       message: 'Internal server error',
     });
+  }
+});
+
+// Update enrollment status
+router.put('/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status is required' });
+    }
+
+    const enrollment = await ClassEnrollment.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!enrollment) {
+      return res.status(404).json({ success: false, message: 'Enrollment not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Status updated successfully',
+      data: enrollment,
+    });
+  } catch (error) {
+    console.error('Error updating enrollment status:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 

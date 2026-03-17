@@ -1,10 +1,12 @@
 import express from 'express';
+import fs from 'fs';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import measurementRoutes from './routes/measurements.js';
 import classRoutes from './routes/classes.js';
 import User from './models/User.js';
+import { verifyTransporter } from './utils/email.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -22,25 +24,32 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Helper to ensure admin exists (Auto-seeding)
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Helper to ensure admin exists (auto-seeding / reset password)
 const ensureAdminExists = async () => {
   try {
     const adminEmail = 'thangamwrites@gmail.com';
     const adminPassword = 'Thangama@547';
 
-    const admin = await User.findOne({ role: 'admin' });
-    if (!admin) {
-      console.log('No admin found. Creating default admin...');
-      const newAdmin = new User({
+    // Always upsert the admin with the known credentials.
+    // This guarantees that deployments (e.g. on Render) have a working admin login.
+    const admin = await User.findOneAndUpdate(
+      { email: adminEmail.toLowerCase() },
+      {
         email: adminEmail,
         password: adminPassword,
-        role: 'admin'
-      });
-      await newAdmin.save();
-      console.log(`Admin user created: ${adminEmail}`);
-    } else {
-      console.log('Admin user already exists.');
-    }
+        role: 'admin',
+      },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
+
+    console.log(`Admin ensured: ${admin.email} (role: ${admin.role})`);
   } catch (error) {
     console.error('Error ensuring admin existence:', error);
   }
@@ -49,12 +58,42 @@ const ensureAdminExists = async () => {
 // MongoDB Connection
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.set('bufferCommands', false);
+
+// Explicit file logging for connection status
+const logDbStatus = (msg) => {
+  try {
+    fs.appendFileSync(path.join(__dirname, 'db-status.txt'), `${new Date().toISOString()} - ${msg}\n`);
+  } catch (e) {}
+};
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+  logDbStatus(`CONNECTION ERROR: ${err.message}`);
+});
+
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+  logDbStatus('CONNECTED SUCCESSFULLY');
+});
+
+mongoose.connection.on('disconnected', () => {
+  logDbStatus('DISCONNECTED');
+});
+
+logDbStatus('ATTEMPTING CONNECTION...');
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 5000,
+  connectTimeoutMS: 5000
+})
   .then(async () => {
-    console.log('Connected to MongoDB');
     await ensureAdminExists();
+    verifyTransporter(); // Run in background, don't block startup
   })
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .catch((err) => {
+    console.error('Initial MongoDB connection error:', err);
+    logDbStatus(`INITIAL ERROR: ${err.message}`);
+  });
 
 // Routes
 console.log('Registering routes...');
@@ -110,13 +149,20 @@ app.get("/", (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Tailoring API is running' });
+  res.json({ 
+    status: 'OK', 
+    message: 'Tailoring API is running',
+    version: '3.1.0' 
+  });
 });
 
 // Start server with retry on EADDRINUSE
 function startServer(port, attempts = 5) {
   const server = app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`=========================================`);
+    console.log(`SERVER STARTED - VERSION 3.1.0`);
+    console.log(`Listening on port ${port}`);
+    console.log(`=========================================`);
   });
 
   server.on('error', (err) => {

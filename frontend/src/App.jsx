@@ -21,6 +21,8 @@ import EnrollmentPage from '@/pages/EnrollmentPage';
 import ClassDetailsPage from '@/pages/ClassDetailsPage';
 import AdminLogin from '@/pages/AdminLogin';
 import AdminDashboard from '@/pages/AdminDashboard';
+import AdminCompleted from '@/pages/AdminCompleted';
+import ContactPage from '@/pages/ContactPage';
 
 function App() {
   return (
@@ -45,8 +47,10 @@ function App() {
             <Route path="/stitching/frock" element={<FrockMeasurementPage />} />
             <Route path="/stitching/anarkali" element={<AnarkaliMeasurementPage />} />
             <Route path="/enroll" element={<EnrollmentPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/completed" element={<AdminCompleted />} />
           </Routes>
         </main>
         <Footer />

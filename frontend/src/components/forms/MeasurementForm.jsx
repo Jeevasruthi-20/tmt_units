@@ -24,6 +24,7 @@ export default function MeasurementForm({ garmentType, fields }) {
     email: '',
     notes: '',
   });
+  const [designFile, setDesignFile] = useState(null);
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (name, value) => {
@@ -31,6 +32,22 @@ export default function MeasurementForm({ garmentType, fields }) {
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors({ ...errors, [name]: '' });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: 'File Too Large',
+          description: 'Design file must be less than 5MB',
+          variant: 'destructive',
+        });
+        e.target.value = '';
+        return;
+      }
+      setDesignFile(file);
     }
   };
 
@@ -86,7 +103,6 @@ export default function MeasurementForm({ garmentType, fields }) {
     setIsSubmitting(true);
 
     try {
-      // Collect all measurement values with unit info
       const measurements = {
         unit: measurementUnit,
       };
@@ -98,18 +114,24 @@ export default function MeasurementForm({ garmentType, fields }) {
         }
       });
 
-      await submitMeasurementOrder({
-        garmentType,
-        customerName: formData.customerName,
-        phone: formData.phone,
-        email: formData.email,
-        measurements,
-        notes: formData.notes,
-      });
+      // Prepare FormData for multipart upload
+      const data = new FormData();
+      data.append('garmentType', garmentType);
+      data.append('customerName', formData.customerName);
+      data.append('phone', formData.phone);
+      data.append('email', formData.email);
+      data.append('notes', formData.notes);
+      data.append('measurements', JSON.stringify(measurements));
+      
+      if (designFile) {
+        data.append('designFile', designFile);
+      }
+
+      await submitMeasurementOrder(data);
 
       toast({
         title: 'Order Submitted Successfully!',
-        description: "We've received your measurements. We'll contact you soon to confirm your order.",
+        description: "We've received your measurements and design. We'll contact you soon to confirm your order.",
       });
 
       // Reset form
@@ -123,6 +145,10 @@ export default function MeasurementForm({ garmentType, fields }) {
           return acc;
         }, {}),
       });
+      setDesignFile(null);
+      // Reset file input manually if needed, but since it's uncontrolled or controlled by state it might be easier to just reset the component or let it be.
+      // Easiest way in React to reset file input is to give it a key or use a ref. 
+      // For simplicity here, we'll just set designFile to null.
       setErrors({});
     } catch (error) {
       toast({
@@ -226,6 +252,30 @@ export default function MeasurementForm({ garmentType, fields }) {
               {errors[field.name] && <p className="text-sm text-red-500">{errors[field.name]}</p>}
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Upload Custom Design */}
+      <div className="space-y-4 pt-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="designFile" className="font-serif font-semibold text-lg text-foreground">
+            Upload Your Own Design (Optional)
+          </Label>
+          <p className="text-sm text-muted-foreground">
+            Have a specific style in mind? Upload a photo or PDF of your desired design.
+          </p>
+        </div>
+        <div className="border-2 border-dashed border-muted rounded-lg p-6 flex flex-col items-center justify-center gap-3 bg-muted/30 hover:bg-muted/50 transition-colors">
+          <Input
+            id="designFile"
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png"
+            onChange={handleFileChange}
+            className="max-w-xs cursor-pointer"
+          />
+          <p className="text-xs text-muted-foreground">
+            Accepted formats: JPG, PNG, PDF (Max 5MB)
+          </p>
         </div>
       </div>
 

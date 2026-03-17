@@ -23,6 +23,9 @@ const measurementSchema = new mongoose.Schema({
     notes: {
         type: String,
     },
+    designFile: {
+        type: String,
+    },
     status: {
         type: String,
         enum: ['pending', 'processing', 'completed', 'cancelled'],

@@ -1,14 +1,8 @@
-import { ArrowLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, ChevronRight, Scissors } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+import Breadcrumbs from '@/components/layout/Breadcrumbs';
 
 const pantTypes = [
   {
@@ -39,90 +33,118 @@ const pantTypes = [
 ];
 
 export default function PantsCategoryPage() {
-  return (
-    <div>
-      {/* Header with breadcrumb */}
-      <section className="bg-gradient-to-br from-primary/10 to-secondary/5 py-6 lg:py-10 border-b border-border/40">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col gap-4">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/">Home</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/stitching">Stitching</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="font-semibold text-primary">
-                    Pants
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+  const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.8 }
+    }
+  };
 
-            <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div className="max-w-2xl">
-                <h1 className="font-serif font-bold text-3xl lg:text-4xl text-foreground mb-2">
-                  Pants Stitching
-                </h1>
-                <p className="text-muted-foreground text-base lg:text-lg">
-                  Choose your pant style. On the next page you can enter detailed
-                  measurements for a perfect, comfortable fit.
-                </p>
+  return (
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header with breadcrumb */}
+      <section className="relative pt-14 pb-12 lg:pt-16 lg:pb-14 bg-muted/30 overflow-hidden border-b border-border/40">
+        <div className="container relative z-10 mx-auto px-4">
+          <div className="max-w-4xl">
+            <Breadcrumbs />
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest border border-primary/20">
+                <Scissors className="h-3.5 w-3.5" />
+                Tailoring Selection
               </div>
-              <Link to="/stitching">
-                <Button variant="ghost" size="sm" className="mt-2">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Stitching
-                </Button>
-              </Link>
+              <h1 className="font-serif font-bold text-5xl lg:text-7xl text-foreground tracking-tight">
+                Pants <span className="text-primary italic">Gallery</span>
+              </h1>
+              <p className="text-xl text-muted-foreground font-light max-w-2xl leading-relaxed">
+                Choose your preferred silhouette. Each style is meticulously crafted to ensure a perfect balance of comfort and elegance.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+        
+        {/* Background Decoration */}
+        <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+      </section>
+
+      {/* Pant type grid */}
+      <section className="container mx-auto px-4 py-20 lg:py-32">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-16">
+            <div className="space-y-2">
+              <h2 className="font-serif font-bold text-3xl text-foreground tracking-tight">Available Silhouettes</h2>
+              <div className="h-1 w-20 bg-primary rounded-full"></div>
             </div>
+            <Link to="/stitching">
+              <Button variant="ghost" size="sm" className="hover:bg-primary/5 hover:text-primary transition-all rounded-xl">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Stitching
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+            {pantTypes.map((type, index) => (
+              <motion.div
+                key={type.id}
+                variants={fadeInUp}
+                initial="initial"
+                whileInView="animate"
+                transition={{ delay: index * 0.1 }}
+              >
+                <Link to={`/stitching/pants/${type.id}`} className="group block h-full">
+                  <div className="h-full rounded-[2.5rem] border border-border/70 bg-white p-6 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] hover:border-primary/30">
+                    <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-[2rem] border bg-muted/20">
+                      <img
+                        src="/images/pants.jpg"
+                        alt={`${type.label} illustration`}
+                        className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    
+                    <div className="space-y-4 px-2">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-serif font-bold text-2xl text-foreground group-hover:text-primary transition-colors tracking-tight">
+                          {type.label}
+                        </h3>
+                        <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-[-45deg]">
+                          <ChevronRight className="h-5 w-5" />
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed font-light italic">
+                        "{type.description}"
+                      </p>
+                      
+                      <div className="pt-4 flex items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">View Details</span>
+                        <div className="h-px flex-1 bg-primary/20"></div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Pant type grid */}
-      <section className="container mx-auto px-4 py-10 lg:py-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-serif font-bold text-2xl text-foreground mb-4">
-            Choose Pant Type
-          </h2>
-          <p className="text-sm text-muted-foreground mb-8">
-            Select a pant category below. You will then be taken to the measurement page
-            for that specific style.
+      {/* Helper Note */}
+      <section className="container mx-auto px-4 pb-20">
+        <div className="max-w-3xl mx-auto rounded-3xl bg-primary/5 p-8 lg:p-12 border border-primary/10 text-center">
+          <p className="text-muted-foreground font-light text-lg">
+            "Each silhouette is optimized for different fabric weights and drape. Not sure which one to pick? 
+            <Link to="/contact" className="text-primary font-bold hover:underline ml-1">Consult with us</Link> for professional styling advice."
           </p>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {pantTypes.map((type) => (
-              <Link key={type.id} to={`/stitching/pants/${type.id}`} className="group">
-                <div className="h-full rounded-xl border border-border/70 bg-white/80 px-4 py-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:border-primary/70">
-                  <div className="mb-3 h-32 w-full overflow-hidden rounded-lg border bg-muted/40">
-                    <img
-                      src="/images/pants.jpg"
-                      alt={`${type.label} illustration`}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary">
-                    {type.label}
-                  </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {type.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
         </div>
       </section>
     </div>
   );
 }
+
 
