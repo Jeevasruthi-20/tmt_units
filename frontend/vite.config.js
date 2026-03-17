@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vitejs.dev/config/
 export default defineConfig({
   root: path.resolve(__dirname, '..'),
+  base: '/',
   build: {
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
