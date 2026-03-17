@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 import { exportEnrollmentsPDF, exportMeasurementsPDF, exportSingleEnrollmentPDF, exportSingleMeasurementPDF } from '@/lib/pdf-export';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { updateEnrollmentStatus, updateMeasurementStatus } from '@/lib/api';
-import { motion, AnimatePresence } from 'framer-motion';
+import { updateMeasurementStatus } from '@/lib/api';
+import { motion } from 'framer-motion';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
 
 const categorizeData = (data) => {

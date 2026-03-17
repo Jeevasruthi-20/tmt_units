@@ -7,6 +7,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  root: path.resolve(__dirname, '..'),
+  build: {
+    outDir: path.resolve(__dirname, 'dist'),
+    emptyOutDir: true,
+  },
+  publicDir: path.resolve(__dirname, 'public'),
+  css: {
+    postcss: __dirname,
+  },
   server: {
     host: "::",
     port: 5173,

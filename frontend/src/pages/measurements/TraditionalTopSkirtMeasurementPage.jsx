@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import Breadcrumbs from '@/components/layout/Breadcrumbs';
 import MeasurementGuide from '@/components/features/MeasurementGuide';
 import MeasurementForm from '@/components/forms/MeasurementForm';
-import { Sparkles, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 export default function TraditionalTopSkirtMeasurementPage() {
   const measurements = [
