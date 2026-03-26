@@ -324,7 +324,7 @@ export default function AdminCompleted() {
                                         <td className="px-8 py-6 text-center">
                                             {order.designFile ? (
                                                 <a 
-                                                    href={`${import.meta.env.PROD ? 'https://tailoring-api.onrender.com/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api')}/..${order.designFile}`} 
+                                                    href={`${import.meta.env.PROD ? 'https://tmt-units-backend.onrender.com/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api')}/..${order.designFile}`} 
                                                     target="_blank" 
                                                     rel="noopener noreferrer"
                                                     className="inline-flex items-center gap-2 text-primary hover:underline font-bold text-xs uppercase tracking-widest"

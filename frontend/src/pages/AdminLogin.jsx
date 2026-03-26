@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { Lock, Mail, Eye, EyeOff, ShieldCheck, Sparkles } from 'lucide-react';
 
 // Configure API base URL:
-const API_BASE_URL = import.meta.env.PROD ? 'https://tailoring-api.onrender.com/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api');
+const API_BASE_URL = import.meta.env.PROD ? 'https://tmt-units-backend.onrender.com/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api');
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
