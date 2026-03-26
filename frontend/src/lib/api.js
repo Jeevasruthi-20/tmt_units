@@ -1,10 +1,10 @@
-const API_BASE_URL = import.meta.env.PROD ? 'https://tailoring-api.onrender.com/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api');
+const API_BASE_URL = import.meta.env.PROD ? 'https://tmt-units-backend.onrender.com/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5000/api');
 
 // Measurement API
 export const submitMeasurementOrder = async (formData) => {
   const response = await fetch(`${API_BASE_URL}/measurements/submit`, {
     method: 'POST',
-    body: formData, // No headers needed for FormData
+    body: formData,
   });
 
   if (!response.ok) {
