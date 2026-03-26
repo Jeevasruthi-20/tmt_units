@@ -20,7 +20,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://thangamdesigner.me',
+    'https://www.thangamdesigner.me',
+    'http://localhost:3000'
+  ],
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -64,7 +71,7 @@ mongoose.set('bufferCommands', false);
 const logDbStatus = (msg) => {
   try {
     fs.appendFileSync(path.join(__dirname, 'db-status.txt'), `${new Date().toISOString()} - ${msg}\n`);
-  } catch (e) {}
+  } catch (e) { }
 };
 
 mongoose.connection.on('error', (err) => {
@@ -87,6 +94,7 @@ mongoose.connect(process.env.MONGO_URI, {
   connectTimeoutMS: 5000
 })
   .then(async () => {
+    console.log("MongoDB connected");
     await ensureAdminExists();
     verifyTransporter(); // Run in background, don't block startup
   })
@@ -149,10 +157,10 @@ app.get("/", (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     message: 'Tailoring API is running',
-    version: '3.1.0' 
+    version: '3.1.0'
   });
 });
 
