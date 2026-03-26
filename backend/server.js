@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import fs from 'fs';
 import cors from 'cors';
@@ -7,7 +8,7 @@ import measurementRoutes from './routes/measurements.js';
 import classRoutes from './routes/classes.js';
 import User from './models/User.js';
 import { verifyTransporter } from './utils/email.js';
-
+import ordersRouter from './routes/orders.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -18,7 +19,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+app.use('/api', ordersRouter);
 // Middleware
 app.use(cors({
   origin: [

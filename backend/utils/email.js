@@ -1,4 +1,4 @@
-// Uses Node.js built-in fetch (Node 18+) — no npm package needed
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,6 +11,23 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'thangamwrites@gmail.com';
 
+const resend = new Resend(RESEND_API_KEY);
+
+export const verifyTransporter = async () => {
+  if (!RESEND_API_KEY || RESEND_API_KEY === 'your_resend_api_key_here') {
+    console.warn('⚠️  RESEND_API_KEY missing — email notifications disabled.');
+    return false;
+  }
+  try {
+    // Resend doesn't have a direct "verify" like nodemailer, but we can check if the key is present
+    console.log('✅ Resend email service ready');
+    return true;
+  } catch (err) {
+    console.error('❌ Resend service verification failed:', err.message);
+    return false;
+  }
+};
+
 async function sendEmail({ to, subject, html, reply_to, from }) {
   if (!RESEND_API_KEY || RESEND_API_KEY === 'your_resend_api_key_here') {
     console.warn('⚠️  RESEND_API_KEY not configured — skipping email.');
@@ -18,24 +35,16 @@ async function sendEmail({ to, subject, html, reply_to, from }) {
   }
 
   try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: from || 'TMT Boutique <onboarding@resend.dev>',
-        to: Array.isArray(to) ? to : [to],
-        reply_to,
-        subject,
-        html,
-      }),
+    const { data, error } = await resend.emails.send({
+      from: from || 'TMT Boutique <onboarding@resend.dev>',
+      to: Array.isArray(to) ? to : [to],
+      reply_to,
+      subject,
+      html,
     });
 
-    const data = await res.json();
-    if (!res.ok) {
-      console.error('❌ Resend API error:', data);
+    if (error) {
+      console.error('❌ Resend API error:', error);
       return null;
     }
     return data;
@@ -44,15 +53,6 @@ async function sendEmail({ to, subject, html, reply_to, from }) {
     return null;
   }
 }
-
-export const verifyTransporter = async () => {
-  if (!RESEND_API_KEY || RESEND_API_KEY === 'your_resend_api_key_here') {
-    console.warn('⚠️  RESEND_API_KEY missing — email notifications disabled.');
-    return false;
-  }
-  console.log('✅ Resend email service ready (no SMTP, uses HTTPS)');
-  return true;
-};
 
 export const sendOrderNotification = async (order, file) => {
   const { customerName, phone, email, garmentType, measurements, notes } = order;
@@ -122,3 +122,21 @@ export const sendClassNotification = async (enrollment) => {
 
   if (data) console.log(`✅ Class email sent for ${name}`);
 };
+
+// Simplified version for the new orders route
+export const sendSimpleOrderNotification = async ({ customerName, product, amount }) => {
+    const data = await sendEmail({
+      to: ADMIN_EMAIL,
+      subject: `New Order from ${customerName}`,
+      html: `
+        <h2>New Order Received! 🛒</h2>
+        <p><strong>Customer:</strong> ${customerName}</p>
+        <p><strong>Product:</strong> ${product}</p>
+        <p><strong>Amount:</strong> ₹${amount}</p>
+        <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+      `,
+    });
+  
+    if (data) console.log(`✅ Simple Order email sent for ${customerName}`);
+};
+
